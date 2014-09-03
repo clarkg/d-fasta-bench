@@ -1,0 +1,19 @@
+# Object files
+*.o
+*.obj
+
+# Executables
+*.exe
+
+# Uncrustify output
+*.uncrustify
+
+# Log files
+*.log
+
+# Temp files
+*~
+
+# Trace files
+trace.log
+trace.def
