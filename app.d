@@ -95,7 +95,7 @@ template TupleRangeTemplate(Range)
 }
 
 template FunctorTemplate(F) {
-	/// Prints in FASTA format, building char by char according to F.
+    /// Prints in FASTA format, building char by char according to F.
     public void make(int charsRemaining, F functor)
     {
         char line[MAX_LINE_WIDTH];
