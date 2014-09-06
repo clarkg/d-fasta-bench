@@ -4,7 +4,15 @@ COMPILER = dmd
 DFLAGS = -w
 LIBS =
 SRC = $(wildcard *.d)
-OBJ = $(SRC:.d=.obj)
+UNAME = $(shell uname)
+ifeq ($(UNAME), Linux) 
+	OBJ = $(SRC:.d=.o)
+else ifeq ($(UNAME), CYGWIN_NT-6.3)
+	OBJ = $(SRC:.d=.obj)
+else
+	$(error Not tested on $(UNAME))
+endif
+
 OUT = $(shell basename `pwd`)
  
 .PHONY: all debug release profile clean
@@ -22,6 +30,8 @@ $(OUT): $(OBJ)
  
 clean:
 	rm -f *~ $(OBJ) $(OUT) trace.{def,log}
- 
+
+%.o: %.d
+	$(COMPILER) $(DFLAGS) -c $<
 %.obj: %.d
 	$(COMPILER) $(DFLAGS) -c $<
