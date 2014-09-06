@@ -22,12 +22,12 @@ import std.range;
 import std.stdint;
 import std.stdio;
 
-char[288] alu =
+char[] alu =
     "GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGGGAGGCCGAGGCGGGCGGA"
     "TCACCTGAGGTCAGGAGTTCGAGACCAGCCTGGCCAACATGGTGAAACCCCGTCTCTACT"
     "AAAAATACAAAAATTAGCCGGGCGTGGTGGCGCGCGCCTGTAATCCCAGCTACTCGGGAG"
     "GCTGAGGCAGGAGAATCGCTTGAACCCGGGAGGCGGAGGTTGCAGTGAGCCGAGATCGCG"
-    "CCACTGCACTCCAGCCTGGGCGACAGAGCGAGACTCCGTCTCAAAAA";
+    "CCACTGCACTCCAGCCTGGGCGACAGAGCGAGACTCCGTCTCAAAAA".dup;
 
 alias IUB = Tuple!(float, "probability", char, "c");
 
@@ -56,10 +56,12 @@ float genRandom(in float max = 1.0f)
     return max * last * (1.0f / IM);
 }
 
+// No need for Tuples when just repeating the same char sequence without use
+// of probability.
 template CharRangeTemplate(Range)
 {
     class RepeatFunctorType {
-    public this(Range range, int length) {
+    public this(Range range) {
         this.range = cycle(range);
     }
 
@@ -142,7 +144,7 @@ void main(string[] args)
 
     writeln(">ONE Homo sapiens alu");
     alias charRangeTemplateInst = CharRangeTemplate!(char[]);
-    auto  repeatFunctor         = new charRangeTemplateInst.RepeatFunctorType(alu, n * 2);
+    auto  repeatFunctor         = new charRangeTemplateInst.RepeatFunctorType(alu);
 
     alias funTemplateInst = FunctorTemplate!(charRangeTemplateInst.RepeatFunctorType);
     funTemplateInst.make(n * 2, repeatFunctor);
