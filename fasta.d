@@ -13,6 +13,8 @@
 // modified by Kim Walisch
 // modified by Tavis Bohne
 // converted back to D from C++ by Clark Gredoña
+//
+// compiles with gdc -w -O3 -frelease -finline-functions -fno-bounds-check -app.d
 
 enum int MAX_LINE_WIDTH = 60;
 
@@ -21,6 +23,7 @@ import std.conv;
 import std.range;
 import std.stdint;
 import std.stdio;
+import std.typecons;
 
 char[] alu =
     "GGCCGGGCGCGGTGGCTCACGCCTGTAATCCCAGCACTTTGGGAGGCCGAGGCGGGCGGA"
@@ -144,14 +147,17 @@ void main(string[] args)
 
     writeln(">ONE Homo sapiens alu");
     alias charRangeTemplateInst = CharRangeTemplate!(char[]);
-    auto  repeatFunctor         = new charRangeTemplateInst.RepeatFunctorType(alu);
+    auto  repeatFunctor         = 
+	new charRangeTemplateInst.RepeatFunctorType(alu);
 
-    alias funTemplateInst = FunctorTemplate!(charRangeTemplateInst.RepeatFunctorType);
+    alias funTemplateInst =
+	FunctorTemplate!(charRangeTemplateInst.RepeatFunctorType);
     funTemplateInst.make(n * 2, repeatFunctor);
 
     writeln(">TWO IUB ambiguity codes");
     alias iubRangeTemplateInst = TupleRangeTemplate!(typeof(iub));
-    alias randFunTemplateInst  = FunctorTemplate!(iubRangeTemplateInst.RandomFunctorType);
+    alias randFunTemplateInst  = 
+	FunctorTemplate!(iubRangeTemplateInst.RandomFunctorType);
 
     auto  randomFunctor = new iubRangeTemplateInst.RandomFunctorType(iub);
     randFunTemplateInst.make(n * 3, randomFunctor);

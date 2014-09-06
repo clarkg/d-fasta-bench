@@ -1,6 +1,9 @@
 # Adapted from darkstalker's makefile: https://gist.github.com/darkstalker/2221824
 
-COMPILER = dmd
+COMPILER = gdc
+# Maybe it's because I'm running this in VirtualBox emulating 64-bit Linux on
+# my Intel Windows host, but adding a -m64 or -m32 flag screws everything up
+# and slows it down.
 DFLAGS = -w
 LIBS =
 SRC = $(wildcard *.d)
@@ -19,14 +22,14 @@ OUT = $(shell basename `pwd`)
  
 all: debug
  
-debug:   DFLAGS += -g -debug
-release: DFLAGS += -O -release -inline -boundscheck=off
-profile: DFLAGS += -g -O -profile
+debug:   DFLAGS += -g -fdebug
+release: DFLAGS += -O3 -frelease -finline-functions -fno-bounds-check
+profile: DFLAGS += -g -O3
  
 debug release profile: $(OUT)
  
 $(OUT): $(OBJ)
-	$(COMPILER) $(DFLAGS) -of$@ $(OBJ) $(LIBS)
+	$(COMPILER) $(DFLAGS) -o$@ $(OBJ) $(LIBS)
  
 clean:
 	rm -f *~ $(OBJ) $(OUT) trace.{def,log}
